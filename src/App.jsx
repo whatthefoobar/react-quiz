@@ -1,10 +1,11 @@
 import "./App.css";
-import QuizApp from "./components/QuizApp";
+import Quiz from "./components/Quiz/Quiz";
 
 function App() {
   return (
     <>
-      <QuizApp />
+      <h1 className="title">Quiz app</h1>
+      <Quiz />;
     </>
   );
 }

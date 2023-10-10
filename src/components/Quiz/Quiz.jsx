@@ -5,10 +5,11 @@ import {
   setSelectedAnswer,
   incrementScore,
   setResultMessage,
-} from "../store";
-import questions from "../questions"; // Import your questions data
+} from "../../store";
+import questions from "../../questions"; // Import your questions data
+import "./Quiz.css";
 
-const QuizApp = () => {
+const Quiz = () => {
   const { currentQuestion, selectedAnswer, score, resultMessage } = useSelector(
     (state) => state.quiz
   );
@@ -29,27 +30,20 @@ const QuizApp = () => {
     }
   };
 
-  // this is faulty
   useEffect(() => {
     const percentageCorrect = (score / questions.length) * 100;
     const message = `Thank you for your answers. You got ${percentageCorrect}% correct answers.`;
     dispatch(setResultMessage(message));
   }, [currentQuestion, selectedAnswer, score, dispatch]);
 
-  // useEffect(() => {
-  //   console.log("selected answer", selectedAnswer);
-  //   console.log("final score", score);
-  // }, [selectedAnswer, score]);
-
   return (
-    <div>
+    <div className="quiz">
       {currentQuestion < questions.length ? (
         <div>
-          <h1>Quiz App</h1>
           <h2>Question {currentQuestion + 1}</h2>
-          <p>{questions[currentQuestion].question}</p>
+          <h3>{questions[currentQuestion].question}</h3>
           {questions[currentQuestion].options.map((option, index) => (
-            <div key={index}>
+            <div className="answer" key={index}>
               <label>
                 <input
                   type="radio"
@@ -72,4 +66,4 @@ const QuizApp = () => {
   );
 };
 
-export default QuizApp;
+export default Quiz;
