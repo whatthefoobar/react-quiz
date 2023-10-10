@@ -23,6 +23,5 @@
   transition: border-color 0.25s;
 }
 .quiz button:hover {
-  border: none;
   background-color: rgb(217, 160, 169);
 }
