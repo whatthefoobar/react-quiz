@@ -1,74 +1,45 @@
-import { useState } from "react";
-
-const questions = [
-  {
-    question: "What is the capital of France?",
-    options: ["Paris", "London", "Berlin", "Madrid"],
-    correctAnswerIndex: 0,
-  },
-  {
-    question: "Which planet is known as the Red Planet?",
-    options: ["Mars", "Jupiter", "Venus", "Saturn"],
-    correctAnswerIndex: 0,
-  },
-  //   {
-  //     question: "What is the largest mammal?",
-  //     options: ["Elephant", "Blue Whale", "Giraffe", "Hippopotamus"],
-  //     correctAnswerIndex: 1,
-  //   },
-  //   {
-  //     question: "Who painted the Mona Lisa?",
-  //     options: [
-  //       "Pablo Picasso",
-  //       "Vincent van Gogh",
-  //       "Leonardo da Vinci",
-  //       "Michelangelo",
-  //     ],
-  //     correctAnswerIndex: 2,
-  //   },
-  //   {
-  //     question: "Which gas do plants use for photosynthesis?",
-  //     options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
-  //     correctAnswerIndex: 1,
-  //   },
-  //   {
-  //     question: "What is the smallest prime number?",
-  //     options: ["1", "2", "3", "5"],
-  //     correctAnswerIndex: 1,
-  //   },
-  // Add more questions here
-];
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setCurrentQuestion,
+  setSelectedAnswer,
+  incrementScore,
+  setResultMessage,
+} from "../store";
+import questions from "../questions"; // Import your questions data
 
 const QuizApp = () => {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [score, setScore] = useState(0);
-  const [resultMessage, setResultMessage] = useState("");
+  const { currentQuestion, selectedAnswer, score, resultMessage } = useSelector(
+    (state) => state.quiz
+  );
+  const dispatch = useDispatch();
 
   const handleAnswerSelect = (index) => {
-    setSelectedAnswer(index);
+    dispatch(setSelectedAnswer(index));
   };
 
   const handleNextQuestion = () => {
     if (selectedAnswer !== null) {
       if (selectedAnswer === questions[currentQuestion].correctAnswerIndex) {
-        setScore(score + 1);
+        dispatch(incrementScore());
       }
 
-      setSelectedAnswer(null);
-      setCurrentQuestion((currentQuestion) => currentQuestion + 1);
-    }
-    if (currentQuestion === questions.length - 1) {
-      const finalScore =
-        selectedAnswer === questions[currentQuestion].correctAnswerIndex
-          ? score + 1
-          : score;
-      const percentageCorrect = (finalScore / questions.length) * 100;
-      setResultMessage(
-        `Thank you for your answers. You got ${percentageCorrect}% correct answers.`
-      );
+      dispatch(setSelectedAnswer(null));
+      dispatch(setCurrentQuestion(currentQuestion + 1));
     }
   };
+
+  // this is faulty
+  useEffect(() => {
+    const percentageCorrect = (score / questions.length) * 100;
+    const message = `Thank you for your answers. You got ${percentageCorrect}% correct answers.`;
+    dispatch(setResultMessage(message));
+  }, [currentQuestion, selectedAnswer, score, dispatch]);
+
+  // useEffect(() => {
+  //   console.log("selected answer", selectedAnswer);
+  //   console.log("final score", score);
+  // }, [selectedAnswer, score]);
 
   return (
     <div>
